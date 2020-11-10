@@ -11,9 +11,9 @@
 
 class SendLogs{
 public:
-    virtual void send();
+    static void send();
     //virtual void fetch();
-    virtual std::string receive();
+    static std::string receive();
 };
 
 #endif //PROJ_ANDROID_SENDLOG_H

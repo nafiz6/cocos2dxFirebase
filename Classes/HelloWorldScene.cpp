@@ -125,16 +125,29 @@ bool HelloWorld::init()
     button->setTitleText("Get new string");
     button->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
-    button->addTouchEventListener(
-    CC_CALLBACK_1(HelloWorld::getString, this));
+   // button->addTouchEventListener(
+    //CC_CALLBACK_1(HelloWorld::getString, this));
+
+    button->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type){
+        switch (type)
+        {
+                case ui::Widget::TouchEventType::BEGAN:
+                        break;
+                case ui::Widget::TouchEventType::ENDED:
+                        HelloWorld::getString();
+                        break;
+                default:
+                        break;
+        }
+
+});
 
     this->addChild(button, 0);
     return true;
 }
 
-void HelloWorld::sendLogs(Ref* pSender){
-    SendLogs sendLogs;
-    sendLogs.send();
+void HelloWorld::sendLogs(){
+    SendLogs::send();
 }
 
 /*
@@ -144,9 +157,8 @@ void HelloWorld::fetch(Ref* pSender){
 }
  */
 
-void HelloWorld::getString(Ref* pSender){
-    SendLogs sendLogs;
-    std::string str = sendLogs.receive();
+void HelloWorld::getString(){
+    std::string str = SendLogs::receive();
     label->setString(str);
 }
 
