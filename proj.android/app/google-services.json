@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "74220943983",
+    "firebase_url": "https://coco2dx.firebaseio.com",
+    "project_id": "coco2dx",
+    "storage_bucket": "coco2dx.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74220943983:android:d2ae522029dcf3094c6b9a",
+        "android_client_info": {
+          "package_name": "com.your_company.mygame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74220943983-8u0l06k4t6h5ot1lq3l3bb47g8ab220h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnkV_cF_6V4w_o6cvmvnKBbHRI-XFhCkU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74220943983-8u0l06k4t6h5ot1lq3l3bb47g8ab220h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
