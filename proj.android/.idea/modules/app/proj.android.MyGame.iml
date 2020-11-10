@@ -40,6 +40,9 @@
     <content url="file://$USER_HOME$/AppData/Local/Android/Sdk/ndk/21.3.6528147/sources/android/cpufeatures">
       <sourceFolder url="file://$USER_HOME$/AppData/Local/Android/Sdk/ndk/21.3.6528147/sources/android/cpufeatures" isTestSource="false" />
     </content>
+    <content url="file://$MODULE_DIR$/../../../..">
+      <sourceFolder url="file://$MODULE_DIR$/../../../.." isTestSource="false" />
+    </content>
     <content url="file://$MODULE_DIR$/../../../../Classes">
       <sourceFolder url="file://$MODULE_DIR$/../../../../Classes" isTestSource="false" />
     </content>

@@ -12,7 +12,7 @@
 class SendLogs{
 public:
     virtual void send();
-    virtual void fetch();
+    //virtual void fetch();
     virtual std::string receive();
 };
 

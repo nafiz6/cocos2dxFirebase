@@ -33,8 +33,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
@@ -76,10 +74,12 @@ public class AppActivity extends Cocos2dxActivity  {
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setMinimumFetchIntervalInSeconds(20)
                 .build();
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
         Map<String, Object> initialMessage = new HashMap<>();
         initialMessage.put("topMessage", "INITIAL MESSAGE");
         mFirebaseRemoteConfig.setDefaultsAsync(initialMessage);
+        fetchUpdate();
     }
 
     public static String getTopMessage(){

@@ -30,6 +30,8 @@
 
 USING_NS_CC;
 
+Label* label;
+
 Scene* HelloWorld::createScene()
 {
     return HelloWorld::create();
@@ -89,8 +91,7 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
 
-    std::string message = "Hello World";
-    auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
+    label = Label::createWithTTF("HELLO WORLD", "fonts/Marker Felt.ttf", 24);
     if (label == nullptr)
     {
         problemLoading("'fonts/Marker Felt.ttf'");
@@ -121,11 +122,11 @@ bool HelloWorld::init()
     }
     auto button = cocos2d::ui::Button::create("button.png", "button.png", "button.png");
 
-    button->setTitleText("SEND LOGS");
+    button->setTitleText("Get new string");
     button->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
     button->addTouchEventListener(
-    CC_CALLBACK_1(HelloWorld::sendLogs, this));
+    CC_CALLBACK_1(HelloWorld::getString, this));
 
     this->addChild(button, 0);
     return true;
@@ -134,6 +135,19 @@ bool HelloWorld::init()
 void HelloWorld::sendLogs(Ref* pSender){
     SendLogs sendLogs;
     sendLogs.send();
+}
+
+/*
+void HelloWorld::fetch(Ref* pSender){
+    SendLogs sendLogs;
+    sendLogs.fetch();
+}
+ */
+
+void HelloWorld::getString(Ref* pSender){
+    SendLogs sendLogs;
+    std::string str = sendLogs.receive();
+    label->setString(str);
 }
 
 void HelloWorld::menuCloseCallback(Ref* pSender)

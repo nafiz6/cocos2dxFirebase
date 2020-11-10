@@ -21,6 +21,7 @@ void SendLogs::send(){
                                          methodInfo.methodID);
 }
 
+/*
 void SendLogs::fetch(){
     cocos2d::JniMethodInfo methodInfo;
     if (! cocos2d::JniHelper::getStaticMethodInfo(methodInfo,
@@ -34,7 +35,7 @@ void SendLogs::fetch(){
                                          methodInfo.methodID);
 
 }
-
+ */
 std::string SendLogs::receive(){
         cocos2d::JniMethodInfo methodInfo;
     if (! cocos2d::JniHelper::getStaticMethodInfo(methodInfo,
@@ -42,9 +43,14 @@ std::string SendLogs::receive(){
                                                   "getTopMessage",
                                                   "()Ljava/lang/String;")) {
         CCLOG("Could not load method information. Wrong signature?");
-        return ;
+        return "FAILED";
     }
-    methodInfo.env->CallStaticVoidMethod(methodInfo.classID,
+    jstring str = (jstring)methodInfo.env->CallStaticObjectMethod(methodInfo.classID,
                                          methodInfo.methodID);
+
+// Convert jstring to native string
+    const char *message = methodInfo.env->GetStringUTFChars(str, 0);
+    std::string msg(message);
+    return msg;
 
 }
