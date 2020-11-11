@@ -15,8 +15,11 @@
         android:icon="@mipmap/ic_launcher">
         
         <!-- Tell Cocos2dxActivity the name of our .so -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-6328592531914654~8098757381"/>
         <meta-data android:name="android.app.lib_name"
-                   android:value="MyGame" />
+            android:value="MyGame" />
 
         <activity
             android:name="org.cocos2dx.cpp.AppActivity"

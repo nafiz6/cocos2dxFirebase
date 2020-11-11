@@ -28,11 +28,17 @@ import android.os.Bundle;
 import org.cocos2dx.lib.Cocos2dxActivity;
 import android.os.Build;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
@@ -45,6 +51,7 @@ public class AppActivity extends Cocos2dxActivity  {
     private static final String DEBUG_TAG = "3";
     static private FirebaseAnalytics mFirebaseAnalytics;
     static private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +73,32 @@ public class AppActivity extends Cocos2dxActivity  {
             getWindow().setAttributes(lp);
         }
         // DO OTHER INITIALIZATION BELOW
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        int gravity= Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        layout.setGravity(gravity);
+
+        this.addContentView(layout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+
+        // Initialize admob
+        MobileAds.initialize(this);
+        mAdView = new AdView(this);
+
+        mAdView.setAdSize(AdSize.SMART_BANNER);
+        mAdView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+
+        // Create an ad request.
+        AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
+
+        layout.addView(mAdView);
+        // Start loading the ad.
+        mAdView.loadAd(adRequestBuilder.build());
+
+        layout.bringToFront();
+
+
+
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         logEvent();
@@ -80,6 +113,8 @@ public class AppActivity extends Cocos2dxActivity  {
         initialMessage.put("topMessage", "INITIAL MESSAGE");
         mFirebaseRemoteConfig.setDefaultsAsync(initialMessage);
         fetchUpdate();
+
+
     }
 
     public static String getTopMessage(){
@@ -116,5 +151,29 @@ public class AppActivity extends Cocos2dxActivity  {
         params.putString("full_text", text);
         mFirebaseAnalytics.logEvent("BUTTON_LOG", params);
     }
+
+     @Override
+     public void onResume() {
+         super.onResume();
+
+         // Resume the AdView.
+         mAdView.resume();
+     }
+
+     @Override
+     public void onPause() {
+         // Pause the AdView.
+         mAdView.pause();
+
+         super.onPause();
+     }
+
+     @Override
+     public void onDestroy() {
+         // Destroy the AdView.
+         mAdView.destroy();
+
+         super.onDestroy();
+     }
 
 }

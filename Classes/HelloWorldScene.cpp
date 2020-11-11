@@ -140,7 +140,7 @@ bool HelloWorld::init()
                         break;
         }
 
-});
+    });
 
     this->addChild(button, 0);
     return true;
