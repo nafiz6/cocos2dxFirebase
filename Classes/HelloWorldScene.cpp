@@ -31,6 +31,9 @@
 USING_NS_CC;
 
 Label* label;
+Label* score;
+
+int score_val;
 
 Scene* HelloWorld::createScene()
 {
@@ -106,6 +109,23 @@ bool HelloWorld::init()
         this->addChild(label, 1);
     }
 
+    score_val = 0;
+    std::string str = "Score: " + std::to_string(score_val);
+    score = Label::createWithTTF(str, "fonts/Marker Felt.ttf", 24);
+    if (score == nullptr)
+    {
+        problemLoading("'fonts/Marker Felt.ttf'");
+    }
+    else
+    {
+
+        score->setPosition(Vec2(origin.x + visibleSize.width - score->getContentSize().width,
+                                origin.y + visibleSize.height - score->getContentSize().height));
+
+        // add the label as a child to this layer
+        this->addChild(score, 1);
+    }
+
     // add "HelloWorld" splash screen"
     auto sprite = Sprite::create("HelloWorld.png");
     if (sprite == nullptr)
@@ -122,7 +142,7 @@ bool HelloWorld::init()
     }
     auto button = cocos2d::ui::Button::create("button.png", "button.png", "button.png");
 
-    button->setTitleText("Get new string");
+    button->setTitleText("Get score by ads");
     button->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
    // button->addTouchEventListener(
@@ -134,7 +154,7 @@ bool HelloWorld::init()
                 case ui::Widget::TouchEventType::BEGAN:
                         break;
                 case ui::Widget::TouchEventType::ENDED:
-                        HelloWorld::getString();
+                        HelloWorld::getReward();
                         break;
                 default:
                         break;
@@ -148,6 +168,16 @@ bool HelloWorld::init()
 
 void HelloWorld::sendLogs(){
     SendLogs::send();
+}
+
+void HelloWorld::incrementScore(){
+    score_val++;
+    std::string str = "Score: " + std::to_string(score_val);
+    score->setString(str);
+}
+
+void HelloWorld::getReward(){
+    SendLogs::getReward();
 }
 
 /*

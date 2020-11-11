@@ -6,6 +6,7 @@
 #include "platform/android/jni/JniHelper.h"
 #include <jni.h>
 #include "cocos2d.h"
+#include "HelloWorldScene.h"
 
 
 void SendLogs::send(){
@@ -21,21 +22,19 @@ void SendLogs::send(){
                                          methodInfo.methodID);
 }
 
-/*
-void SendLogs::fetch(){
+void SendLogs::getReward(){
     cocos2d::JniMethodInfo methodInfo;
     if (! cocos2d::JniHelper::getStaticMethodInfo(methodInfo,
-                                                  "org.cocos2dx.cpp.AppActivity",
-                                                  "fetchUpdate",
-                                                  "()V")) {
+    "org.cocos2dx.cpp.AppActivity",
+    "getReward",
+    "()V")) {
         CCLOG("Could not load method information. Wrong signature?");
         return;
     }
     methodInfo.env->CallStaticVoidMethod(methodInfo.classID,
                                          methodInfo.methodID);
-
 }
- */
+
 std::string SendLogs::receive(){
         cocos2d::JniMethodInfo methodInfo;
     if (! cocos2d::JniHelper::getStaticMethodInfo(methodInfo,
@@ -53,4 +52,12 @@ std::string SendLogs::receive(){
     std::string msg(message);
     return msg;
 
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_org_cocos2dx_cpp_AppActivity_incrementScore(JNIEnv *env, jobject thiz) {
+    HelloWorld::incrementScore();
+
+    // TODO: implement incrementScore()
 }

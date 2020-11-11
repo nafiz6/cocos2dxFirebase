@@ -35,10 +35,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
@@ -51,7 +60,13 @@ public class AppActivity extends Cocos2dxActivity  {
     private static final String DEBUG_TAG = "3";
     static private FirebaseAnalytics mFirebaseAnalytics;
     static private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    static private AppActivity appActivity;
+
+    public native void incrementScore();
+
     private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
+    private static RewardedAd rewardedAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +88,8 @@ public class AppActivity extends Cocos2dxActivity  {
             getWindow().setAttributes(lp);
         }
         // DO OTHER INITIALIZATION BELOW
+        appActivity = this;
+
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -81,6 +98,7 @@ public class AppActivity extends Cocos2dxActivity  {
 
         this.addContentView(layout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
 
+        // BANNER ADS
         // Initialize admob
         MobileAds.initialize(this);
         mAdView = new AdView(this);
@@ -97,8 +115,24 @@ public class AppActivity extends Cocos2dxActivity  {
 
         layout.bringToFront();
 
+        //InterstitialAd
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                mInterstitialAd.show();
 
+            }
+        });
+
+        //Reward Ads
+
+        System.out.println("CREATE");
+        rewardedAd = createAndLoadRewardedAd();
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         logEvent();
@@ -115,6 +149,74 @@ public class AppActivity extends Cocos2dxActivity  {
         fetchUpdate();
 
 
+    }
+
+    public static void getReward(){
+        appActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showReward();
+            }
+        });
+
+    }
+
+    public static void showReward(){
+        System.out.println("GET REWARD CALLED");
+        if (rewardedAd.isLoaded()) {
+            RewardedAdCallback adCallback = new RewardedAdCallback() {
+                @Override
+                public void onRewardedAdOpened() {
+                    // Ad opened.
+                    System.out.println("REWARD AD VIEWING");
+                }
+
+                @Override
+                public void onRewardedAdClosed() {
+                    // Ad closed
+                    rewardedAd = createAndLoadRewardedAd();
+                }
+
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem reward) {
+                    // User earned reward.
+                    System.out.println("REWARD TYPE " + reward.getType());
+                    System.out.println("REWARD AMOUNT " + reward.getAmount());
+                    appActivity.incrementScore();
+                }
+
+                @Override
+                public void onRewardedAdFailedToShow(AdError adError) {
+                    // Ad failed to display.
+                }
+            };
+            rewardedAd.show(appActivity, adCallback);
+        } else {
+            Log.d("TAG", "The rewarded ad wasn't loaded yet.");
+        }
+
+    }
+
+    public static RewardedAd createAndLoadRewardedAd() {
+        System.out.println("CREATING REWAEDED ADD");
+        RewardedAd rewardedAd = new RewardedAd(appActivity,
+                "ca-app-pub-3940256099942544/5224354917");
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+                // Ad successfully loaded.
+                System.out.println("REWARD AD LOADED");
+
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(LoadAdError adError) {
+                System.out.println("FAILED TO LOAD");
+                // Ad failed to load.
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+        return rewardedAd;
     }
 
     public static String getTopMessage(){

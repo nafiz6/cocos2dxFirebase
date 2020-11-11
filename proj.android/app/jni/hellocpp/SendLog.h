@@ -12,6 +12,7 @@
 class SendLogs{
 public:
     static void send();
+    static void getReward();
     //virtual void fetch();
     static std::string receive();
 };

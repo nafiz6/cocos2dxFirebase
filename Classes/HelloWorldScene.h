@@ -33,12 +33,15 @@ public:
     static cocos2d::Scene* createScene();
 
     virtual bool init();
-    
+
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
     void sendLogs();
     //void fetch();
     void getString();
+    void getReward();
+    static void incrementScore();
+
 
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
